@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
-import { ShoppingCart, Menu as MenuIcon, X } from 'lucide-react';
+import { ShoppingCart, Menu as MenuIcon, X, User, LogOut } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { Cart } from './Cart';
+import { useAuth } from '../context/AuthContext';
+import { AuthModal } from './AuthModal';
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const { state } = useCart();
+  const { user, logout } = useAuth();
 
   const itemCount = state.items.reduce((total, item) => total + item.quantity, 0);
+
+  const handleLogout = () => {
+    logout();
+  };
 
   return (
     <>
@@ -28,15 +36,37 @@ export function Navbar() {
 
               <button 
                 onClick={() => setIsCartOpen(true)}
-                className="flex items-center space-x-1 bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700"
+                className="flex items-center space-x-1 bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700 transition-colors"
               >
                 <ShoppingCart size={20} />
                 <span>Cart ({itemCount})</span>
               </button>
 
-              {/* Login and Signup */}
-              <a href="/login" className="text-gray-700 hover:text-orange-600 px-2">Login</a>
-              <a href="/signup" className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-2 rounded-md">Signup</a>
+              {/* Auth Section */}
+              {user ? (
+                <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+                      <User size={16} className="text-orange-600" />
+                    </div>
+                    <span className="text-gray-700 font-medium">{user.name}</span>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center space-x-1 text-gray-600 hover:text-red-600 transition-colors"
+                  >
+                    <LogOut size={16} />
+                    <span>Logout</span>
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setShowAuthModal(true)}
+                  className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md transition-colors"
+                >
+                  Sign In
+                </button>
+              )}
             </div>
 
             {/* Hamburger menu */}
@@ -68,9 +98,34 @@ export function Navbar() {
                 <span>Cart ({itemCount})</span>
               </button>
 
-              {/* Mobile Login/Signup */}
-              <a href="/login" className="block text-gray-700 hover:text-orange-600">Login</a>
-              <a href="/signup" className="block text-gray-800 bg-gray-200 hover:bg-gray-300 px-3 py-2 rounded-md">Signup</a>
+              {/* Mobile Auth */}
+              {user ? (
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2 px-2">
+                    <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+                      <User size={16} className="text-orange-600" />
+                    </div>
+                    <span className="text-gray-700 font-medium">{user.name}</span>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center space-x-1 text-gray-600 hover:text-red-600 w-full px-2 py-1"
+                  >
+                    <LogOut size={16} />
+                    <span>Logout</span>
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => {
+                    setShowAuthModal(true);
+                    setIsMenuOpen(false);
+                  }}
+                  className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md w-full transition-colors"
+                >
+                  Sign In
+                </button>
+              )}
             </div>
           </div>
         )}
@@ -78,6 +133,14 @@ export function Navbar() {
 
       {/* Cart Drawer */}
       <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+
+      {/* Auth Modal */}
+      {showAuthModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+            <AuthModal onClose={() => setShowAuthModal(false)} />
+          </div>
+        </div>
+      )}
     </>
   );
-}
