@@ -3,7 +3,6 @@ import { ShoppingCart, Menu as MenuIcon, X, User, LogOut } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { Cart } from './Cart';
 import { useAuth } from '../context/AuthContext';
-import { AuthModal } from './AuthModal';
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -144,3 +143,4 @@ export function Navbar() {
       )}
     </>
   );
+}
