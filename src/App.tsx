@@ -31,18 +31,3 @@ function App() {
 }
 
 export default App;
-                <Hero />
-                <Menu />
-                <About />
-                <Contact />
-              </>
-            } />
-            <Route path="/login" element={<Login />} />
-          </Routes>
-        </div>
-      </Router>
-    </CartProvider>
-  );
-}
-
-export default App;
