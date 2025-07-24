@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-+import { motion, AnimatePresence } from 'framer-motion';
-+import { X, Mail, Lock, User, Eye, EyeOff, Loader } from 'lucide-react';
-+import { useAuth } from '../context/AuthContext';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X, Mail, Lock, User, Eye, EyeOff, Loader } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 +
 +interface AuthModalProps {
 +  onClose: () => void;
